@@ -31,14 +31,14 @@ public class TileHandler
 		try
 		{
 			tile[0] = new Tile(); //in this method, we are creating tiles and putting the correspoinding image into the array
-			tile[0].tile_image = ImageIO.read(getClass().getResourceAsStream("/tile/grass.png")); //for example, the first tile is a grass tile
+			tile[0].tile_image = ImageIO.read(getClass().getResourceAsStream("/tile/000.png")); //for example, the first tile is a grass tile
 
 			tile[1] = new Tile();
-			tile[1].tile_image = ImageIO.read(getClass().getResourceAsStream("/tile/wall.png"));
+			tile[1].tile_image = ImageIO.read(getClass().getResourceAsStream("/tile/001.png"));
 			tile[1].collision = true;
 
 			tile[2] = new Tile();
-			tile[2].tile_image = ImageIO.read(getClass().getResourceAsStream("/tile/tree.png"));
+			tile[2].tile_image = ImageIO.read(getClass().getResourceAsStream("/tile/002.png"));
 			tile[2].collision = true;
 		}
 		catch (IOException e)
