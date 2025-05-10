@@ -64,4 +64,87 @@ public class CollisionChecker
 				break;
 		}
 	}
+
+	public int checkObject(Entity entity, boolean player)
+	{
+		int index=999;
+		for(int i=0; i<game_panel.obj.length; i++)
+		{
+			if(game_panel.obj[i]!=null)
+			{
+				//get entity solid area pos
+				entity.solid_area.x = entity.x_pos + entity.solid_area.x;
+				entity.solid_area.y = entity.y_pos + entity.solid_area.y;
+				//get object's solid pos
+				game_panel.obj[i].solid_area.x = game_panel.obj[i].x_pos + game_panel.obj[i].solid_area.x;
+				game_panel.obj[i].solid_area.y = game_panel.obj[i].y_pos + game_panel.obj[i].solid_area.y;
+
+				switch(entity.direction)
+				{
+					case "up":
+						entity.solid_area.y -= entity.speed;
+						if(entity.solid_area.intersects(game_panel.obj[i].solid_area))
+						{
+							if(game_panel.obj[i].collision==true)
+							{
+								entity.collision_on = true;
+							}
+							if(player == true)
+							{
+								index=i;
+							}
+						}
+						break;
+					case "down":
+						entity.solid_area.y += entity.speed;
+						if(entity.solid_area.intersects(game_panel.obj[i].solid_area))
+						{
+							if(game_panel.obj[i].collision==true)
+							{
+								entity.collision_on = true;
+							}
+							if(player == true)
+							{
+								index=i;
+							}
+						}
+						break;
+					case "right":
+						entity.solid_area.x += entity.speed;
+						if(entity.solid_area.intersects(game_panel.obj[i].solid_area))
+						{
+							if(game_panel.obj[i].collision==true)
+							{
+								entity.collision_on = true;
+							}
+							if(player == true)
+							{
+								index=i;
+							}
+						}
+						break;
+					case "left":
+						entity.solid_area.x -= entity.speed;
+						if(entity.solid_area.intersects(game_panel.obj[i].solid_area))
+						{
+							if(game_panel.obj[i].collision==true)
+							{
+								entity.collision_on = true;
+							}
+							if(player == true)
+							{
+								index=i;
+							}
+						}
+						break;
+				}
+				entity.solid_area.x = entity.x_solid_area_default;
+				entity.solid_area.y = entity.y_solid_area_default;
+				game_panel.obj[i].solid_area.x = game_panel.obj[i].x_solid_area_default;
+				game_panel.obj[i].solid_area.y = game_panel.obj[i].y_solid_area_default;
+			}
+		}
+
+		return index;
+	}
 }

@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -16,13 +17,17 @@ public class Player extends Entity
 {
 	GamePanel game_panel;
 	KeyHandler key_handler;
+	int has_order=0;
+	int score=0;
+	ArrayList<Integer> inv = new ArrayList<Integer>();
 
 	public Player(GamePanel game_panel, KeyHandler key_handler)
 	{
 		this.game_panel = game_panel;
 		this.key_handler = key_handler;
-		solid_area = new Rectangle(8, 16, 32, 32); //this solid area is used for the collision with the tiles that
-		//are not possible. we can change the solid area values for the sprite later
+		solid_area = new Rectangle(8,16,32,30);
+		x_solid_area_default = solid_area.x;
+		y_solid_area_default = solid_area.y;
 
 		setDefaultVal();
 		getSprite();
@@ -30,8 +35,8 @@ public class Player extends Entity
 
 	public void setDefaultVal() //this method sets the default values that we put the player in
 	{
-		x_pos = 0;
-		y_pos = 0;
+		x_pos = 48;
+		y_pos = 48;
 		speed = 4;
 		direction = "down";
 	}
@@ -57,8 +62,6 @@ public class Player extends Entity
 
 	public void update() // the first important core of the game, this method updates the player's position according to
 	{//the keys presented
-		collision_on = false;
-		game_panel.collision_checker.checkTile(this); //this part checks collision whenever this is ran
 		if(key_handler.up_pressed)//if up key is pressed
 		{
 			direction = "up";
@@ -92,6 +95,15 @@ public class Player extends Entity
 			}
 		}
 
+		//tile collision
+		collision_on = false;
+		game_panel.collision_checker.checkTile(this); //this part checks collision whenever this is ran
+
+
+		//object collision
+		int obj_index = game_panel.collision_checker.checkObject(this, true);
+		pickUpObject(obj_index);
+
 		sprite_counter++; //sprite counter is added +1. though, to be precise, because this update method is called 60 times per sec,
 		if(sprite_counter>15) //we can continuously update the sprite by 10 frames per second (we can change how much this change
 		{//by changing the value above)
@@ -104,6 +116,35 @@ public class Player extends Entity
 				sprite_num=1;
 			}
 			sprite_counter=0; //we then reset the sprite counter
+		}
+	}
+
+	public void pickUpObject(int i)
+	{
+		if(i != 999)
+		{
+			String obj_name = game_panel.obj[i].name;
+
+			switch (obj_name)
+			{
+				case "notif":
+					has_order++;
+					inv.add(game_panel.obj[i].num_assigned);
+					game_panel.obj[i]=null;
+					//game_panel.asset_setter.replace();
+					System.out.println("Order in Inventory!");
+					break;
+				case "door":
+					if(has_order>0 && inv.contains(game_panel.obj[i].num_assigned))
+					{
+						has_order--;
+						inv.remove(Integer.valueOf(game_panel.obj[i].num_assigned));
+						score++;
+						System.out.println("Order delivered!");
+						System.out.println("Score: " + score);
+					}
+					break;
+			}
 		}
 	}
 

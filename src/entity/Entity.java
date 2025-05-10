@@ -15,5 +15,6 @@ public class Entity
 	public int sprite_num=1;
 
 	public Rectangle solid_area;
+	public int x_solid_area_default, y_solid_area_default;
 	public boolean collision_on = false;
 }
