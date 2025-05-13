@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import finalproj.GamePanel;
 import finalproj.KeyHandler;
+import finalproj.Timer;
 
 public class Player extends Entity
 {
@@ -20,6 +21,11 @@ public class Player extends Entity
 	int has_order=0;
 	int score=0;
 	ArrayList<Integer> inv = new ArrayList<Integer>();
+
+	Timer timer1;
+	Timer timer2;
+	Timer timer3;
+	Timer timer4;
 
 	public Player(GamePanel game_panel, KeyHandler key_handler)
 	{
@@ -99,7 +105,6 @@ public class Player extends Entity
 		collision_on = false;
 		game_panel.collision_checker.checkTile(this); //this part checks collision whenever this is ran
 
-
 		//object collision
 		int obj_index = game_panel.collision_checker.checkObject(this, true);
 		pickUpObject(obj_index);
@@ -117,6 +122,60 @@ public class Player extends Entity
 			}
 			sprite_counter=0; //we then reset the sprite counter
 		}
+
+		//timer for the orders
+		if(timer1!=null)
+		{
+			if(timer1.getSecondsElapsed()<30 && !timer1.isStopped())
+			{
+				timer1.setSecondsElapsed(game_panel.seconds_display);
+				//System.out.println(timer1.getSecondsElapsed());
+			}
+			else if(timer1.getSecondsElapsed()==30)
+			{
+				game_panel.asset_setter.replace1();
+				timer1.reset();
+			}
+		}
+		if(timer2!=null)
+		{
+			if(timer2.getSecondsElapsed()<30 && !timer2.isStopped())
+			{
+				timer2.setSecondsElapsed(game_panel.seconds_display);
+				//System.out.println(timer2.getSecondsElapsed());
+			}
+			else if(timer2.getSecondsElapsed()==30)
+			{
+				game_panel.asset_setter.replace2();
+				timer2.reset();
+			}
+		}
+		if(timer3!=null)
+		{
+			if(timer3.getSecondsElapsed()<30 && !timer3.isStopped())
+			{
+				timer3.setSecondsElapsed(game_panel.seconds_display);
+				//System.out.println(timer3.getSecondsElapsed());
+			}
+			else if(timer3.getSecondsElapsed()==30)
+			{
+				game_panel.asset_setter.replace3();
+				timer3.reset();
+			}
+		}
+		if(timer4!=null)
+		{
+			if(timer4.getSecondsElapsed()<30 && !timer4.isStopped())
+			{
+				timer4.setSecondsElapsed(game_panel.seconds_display);
+				//System.out.println(timer4.getSecondsElapsed());
+			}
+			else if(timer4.getSecondsElapsed()==30)
+			{
+				game_panel.asset_setter.replace4();
+				timer4.reset();
+			}
+		}
 	}
 
 	public void pickUpObject(int i)
@@ -128,10 +187,54 @@ public class Player extends Entity
 			switch (obj_name)
 			{
 				case "notif":
+					System.out.println(game_panel.obj[i].num_assigned);
 					has_order++;
 					inv.add(game_panel.obj[i].num_assigned);
+					if(game_panel.obj[i].num_link==1)
+					{
+						if(timer1==null)
+						{
+							timer1 = new Timer(game_panel);
+						}
+						else
+						{
+							timer1.go();
+						}
+					}
+					else if(game_panel.obj[i].num_link==2)
+					{
+						if(timer2==null)
+						{
+							timer2 = new Timer(game_panel);
+						}
+						else
+						{
+							timer2.go();
+						}
+					}
+					else if(game_panel.obj[i].num_link==3)
+					{
+						if(timer3==null)
+						{
+							timer3 = new Timer(game_panel);
+						}
+						else
+						{
+							timer3.go();
+						}
+					}
+					else if(game_panel.obj[i].num_link==4)
+					{
+						if(timer4==null)
+						{
+							timer4 = new Timer(game_panel);
+						}
+						else
+						{
+							timer4.go();
+						}
+					}
 					game_panel.obj[i]=null;
-					//game_panel.asset_setter.replace();
 					System.out.println("Order in Inventory!");
 					break;
 				case "door":

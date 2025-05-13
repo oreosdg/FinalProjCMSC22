@@ -11,7 +11,8 @@ public class SuperObject
 	public BufferedImage image;
 	public String name;
 	public int num_assigned;
-	public boolean deleted = false;
+	public int num_link;
+
 	public boolean collision = false;
 	public int x_pos, y_pos;
 	public Rectangle solid_area = new Rectangle(0,0, 48, 48);

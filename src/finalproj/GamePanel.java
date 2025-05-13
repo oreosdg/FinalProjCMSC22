@@ -26,11 +26,14 @@ public class GamePanel extends JPanel implements Runnable
 	KeyHandler key_handler = new KeyHandler(); //instantiation of key handler which stores which arrow keys are handled
 	public CollisionChecker collision_checker = new CollisionChecker(this);
 	public AssetSetter asset_setter = new AssetSetter(this);
-	Thread gameThread; // thread instantiation so that the application knows it is running
+	Thread game_thread; // thread instantiation so that the application knows it is running
 	Player player1 = new Player(this, key_handler);
 	//player2 here
 
 	public SuperObject obj[] = new SuperObject[20];
+
+	long start_time;
+	public long seconds_display;
 
 	int player1_xPos = 100; //inital player1 position at x=100
 	int player1_yPos = 100; //inital player1 position at y=100
@@ -49,8 +52,8 @@ public class GamePanel extends JPanel implements Runnable
 
 	public void startGameThread()
 	{
-		gameThread = new Thread(this); //we can treat threads as time
-		gameThread.start();//will call the run method from the implemented runnable
+		game_thread = new Thread(this); //we can treat threads as time
+		game_thread.start();//will call the run method from the implemented runnable
 	}
 
 	public void setUpGame()
@@ -64,13 +67,13 @@ public class GamePanel extends JPanel implements Runnable
 		double draw_interval = 1000000000/FPS; //used for restricting how much the application updates
 		//in this case, every 0.01666666 sec, the game updates that fast
 		double next_draw_time = System.nanoTime() + draw_interval;
-		long startTime = System.currentTimeMillis();
-		while(gameThread != null) //while the gamethread exists
+		start_time = System.currentTimeMillis();
+		while(game_thread != null) //while the gamethread exists
 		{
-			long elapsedTime = System.currentTimeMillis() - startTime;
-			long elapsedSeconds = elapsedTime / 1000;
-			long secondsDisplay = elapsedSeconds % 60;
-			//System.out.println(secondsDisplay);
+			long elapsed_time = System.currentTimeMillis() - start_time;
+			long elapsed_seconds = elapsed_time / 1000;
+			seconds_display = elapsed_seconds % 999999999;
+			//System.out.println(seconds_display);
 			//update character position
 			update();
 
