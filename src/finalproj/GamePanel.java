@@ -12,7 +12,8 @@ import entity.Player;
 import object.SuperObject;
 import tile.TileHandler;
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable
+{
     final int orig_tile_size = 16;
     final int scale = 3;
 
@@ -27,7 +28,8 @@ public class GamePanel extends JPanel implements Runnable {
     public CollisionChecker collision_checker = new CollisionChecker(this);
     public AssetSetter asset_setter = new AssetSetter(this);
     Thread gameThread;
-    Player player1 = new Player(this, key_handler);
+    Player player1 = new Player(this, key_handler, 1);
+    Player player2 = new Player(this, key_handler, 2);
 
     public SuperObject obj[] = new SuperObject[20];
 
@@ -61,7 +63,8 @@ public class GamePanel extends JPanel implements Runnable {
     private int shakeOffsetX = 0;
     private int shakeOffsetY = 0;
 
-    public GamePanel() {
+    public GamePanel()
+    {
         this.setPreferredSize(new Dimension(screen_width, screen_height));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -77,12 +80,14 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void startGameThread() {
+    public void startGameThread()
+    {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
-    public void setUpGame() {
+    public void setUpGame()
+    {
         asset_setter.setObject();
         lastDisasterTime = System.currentTimeMillis();
         // Random interval for first disaster
@@ -91,37 +96,47 @@ public class GamePanel extends JPanel implements Runnable {
 
     // MAIN GAME
     @Override
-    public void run() {
+    public void run()
+    {
         double draw_interval = 1000000000 / FPS;
         double next_draw_time = System.nanoTime() + draw_interval;
         start_time = System.currentTimeMillis();
-        while (gameThread != null) {
+        while (gameThread != null)
+        {
         	long elapsed_time = System.currentTimeMillis() - start_time;
         	long elapsed_seconds = elapsed_time / 1000;
         	seconds_display = elapsed_seconds % 999999999;
             long currentTime = System.currentTimeMillis();
 
             // Trigger disaster if time for next disaster reached and no active disaster
-            if (!disasterActive && currentTime - lastDisasterTime >= disasterInterval) {
+            if (!disasterActive && currentTime - lastDisasterTime >= disasterInterval)
+            {
                 triggerDisaster();
                 lastDisasterTime = currentTime;
                 disasterActive = true;
                 disasterStartTime = currentTime;
             }
 
-            if (disasterActive) {
+            if (disasterActive)
+            {
                 long disasterDuration = getDisasterDuration(currentDisaster);
-                if (currentTime - disasterStartTime >= disasterDuration) {
+                if (currentTime - disasterStartTime >= disasterDuration)
+                {
                     endDisaster();
-                } else if (currentDisaster == NaturalDisaster.EARTHQUAKE) {
+                } else if (currentDisaster == NaturalDisaster.EARTHQUAKE)
+                {
                     // Earthquake shake offsets randomly updated every frame during quake
                     shakeOffsetX = random.nextInt(7) - 3; // -3 to +3 pixels
                     shakeOffsetY = random.nextInt(7) - 3;
-                } else {
+                }
+                else
+                {
                     shakeOffsetX = 0;
                     shakeOffsetY = 0;
                 }
-            } else {
+            }
+            else
+            {
                 shakeOffsetX = 0;
                 shakeOffsetY = 0;
             }
@@ -129,21 +144,26 @@ public class GamePanel extends JPanel implements Runnable {
             update();
             repaint();
 
-            try {
+            try
+            {
                 double remaining_time = next_draw_time - System.nanoTime();
                 remaining_time = remaining_time / 1000000;
                 if (remaining_time < 0) remaining_time = 0;
                 Thread.sleep((long) remaining_time);
                 next_draw_time += draw_interval;
-            } catch (InterruptedException e) {
+            } catch (InterruptedException e)
+            {
                 e.printStackTrace();
             }
         }
     }
 
-    public void update() {
-        if (disasterActive) {
-            switch (currentDisaster) {
+    public void update()
+    {
+        if (disasterActive)
+        {
+            switch (currentDisaster)
+            {
                 case THUNDERSTORM:
                     player_speed = original_speed * 4; // speed quadrupled
                     updateRain();
@@ -158,18 +178,24 @@ public class GamePanel extends JPanel implements Runnable {
                     player_speed = original_speed;
                     break;
             }
-        } else {
+        }
+        else
+        {
             player_speed = original_speed;
         }
         player1.update();
+        player2.update();
     }
 
-    private void updateRain() {
-        for (int i = 0; i < maxRaindrops; i++) {
+    private void updateRain()
+    {
+        for (int i = 0; i < maxRaindrops; i++)
+        {
             rainY[i] += rainSpeedArr[i]; // Use individual speed for each raindrop
 
             // If the raindrop goes below the screen, reset its position
-            if (rainY[i] > screen_height) {
+            if (rainY[i] > screen_height)
+            {
                 rainX[i] = random.nextInt(screen_width); // Random X position
                 rainY[i] = -random.nextInt(screen_height); // Respawn above the screen randomly
                 rainSpeedArr[i] = rainSpeed - 5 + random.nextInt(11); // Reassign speed on reset
@@ -180,28 +206,34 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g)
+    {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
         // Apply earthquake shake offsets to all drawings
         g2.translate(shakeOffsetX, shakeOffsetY);
 
-        if (currentDisaster == NaturalDisaster.BLACKOUT && disasterActive) {
+        if (currentDisaster == NaturalDisaster.BLACKOUT && disasterActive)
+        {
             // Blackout: fill screen black except player (drawn later)
             g2.setColor(Color.BLACK);
             g2.fillRect(0, 0, screen_width, screen_height);
-        } else {
+        } else
+        {
             // Draw tiles and objects normally
             tile_handler.draw(g2);
-            for (SuperObject obj : obj) {
+            for (SuperObject obj : obj)
+            {
                 if (obj != null) obj.draw(g2, this);
             }
         }
 
         // Draw visual overlays for disasters
-        if (disasterActive && currentDisaster != null) {
-            switch (currentDisaster) {
+        if (disasterActive && currentDisaster != null)
+        {
+            switch (currentDisaster)
+            {
                 case THUNDERSTORM:
                     drawThunderstormEffect(g2);
                     break;
@@ -216,6 +248,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Draw player on top
         player1.draw(g2);
+        player2.draw(g2);
 
         // Reset translation
         g2.translate(-shakeOffsetX, -shakeOffsetY);
@@ -223,7 +256,8 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
-    private void drawThunderstormEffect(Graphics2D g2) {
+    private void drawThunderstormEffect(Graphics2D g2)
+    {
         // Bluish transparent overlay for blur effect
         g2.setColor(new Color(0, 50, 100, 120));
         g2.fillRect(0, 0, screen_width, screen_height);
@@ -231,7 +265,8 @@ public class GamePanel extends JPanel implements Runnable {
         // Raindrops as light blue lines
         g2.setColor(new Color(173, 216, 230, 180));
         g2.setStroke(new BasicStroke(2));
-        for (int i = 0; i < maxRaindrops; i++) {
+        for (int i = 0; i < maxRaindrops; i++)
+        {
             int x = rainX[i];
             int y = rainY[i];
 
@@ -240,7 +275,8 @@ public class GamePanel extends JPanel implements Runnable {
         g2.setStroke(new BasicStroke(1));
     }
 
-    private void drawEarthquakeEffect(Graphics2D g2) {
+    private void drawEarthquakeEffect(Graphics2D g2)
+    {
         // Gray transparent overlay for blur
         g2.setColor(new Color(100, 100, 100, 100));
         g2.fillRect(0, 0, screen_width, screen_height);
@@ -264,7 +300,8 @@ public class GamePanel extends JPanel implements Runnable {
 
         System.out.println("Disaster started: " + currentDisaster);
 
-        if (currentDisaster == NaturalDisaster.THUNDERSTORM) {
+        if (currentDisaster == NaturalDisaster.THUNDERSTORM)
+        {
             // Reset raindrops for fresh start
             for (int i = 0; i < maxRaindrops; i++) {
                 rainX[i] = random.nextInt(screen_width);
@@ -275,7 +312,8 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public long getDisasterDuration(NaturalDisaster disaster) {
+    public long getDisasterDuration(NaturalDisaster disaster)
+    {
         switch (disaster) {
             case THUNDERSTORM:
                 return 5000; // 5 seconds
@@ -288,7 +326,8 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void endDisaster() {
+    public void endDisaster()
+    {
         System.out.println("Disaster ended: " + currentDisaster);
         currentDisaster = null;
         disasterActive = false;
@@ -303,17 +342,20 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     // Check if player is disoriented (Earthquake)
-    public boolean isPlayerDisoriented() {
+    public boolean isPlayerDisoriented()
+    {
         return disasterActive && currentDisaster == NaturalDisaster.EARTHQUAKE;
     }
 
     // Get current player's speed
-    public int getPlayerSpeed() {
+    public int getPlayerSpeed()
+    {
         return player_speed;
     }
 
     // Enum for disasters
-    public enum NaturalDisaster {
+    public enum NaturalDisaster
+    {
         THUNDERSTORM,
         BLACKOUT,
         EARTHQUAKE

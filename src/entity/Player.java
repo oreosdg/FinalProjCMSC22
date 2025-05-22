@@ -15,6 +15,7 @@ import finalproj.Timer;
 public class Player extends Entity {
     GamePanel game_panel;
     KeyHandler key_handler;
+    int player_num;
     int has_order = 0;
     int score = 0;
     ArrayList<Integer> inv = new ArrayList<Integer>();
@@ -24,9 +25,10 @@ public class Player extends Entity {
 	Timer timer3;
 	Timer timer4;
 
-    public Player(GamePanel game_panel, KeyHandler key_handler) {
+    public Player(GamePanel game_panel, KeyHandler key_handler, int player_num) {
         this.game_panel = game_panel;
         this.key_handler = key_handler;
+        this.player_num = player_num;
         solid_area = new Rectangle(8, 16, 32, 32);
         x_solid_area_default = solid_area.x;
         y_solid_area_default = solid_area.y;
@@ -45,14 +47,29 @@ public class Player extends Entity {
     public void getSprite() {
         try
         {
-            up1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_up_1.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_up_2.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_down_1.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_down_2.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_right_1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_right_2.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_left_1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_left_2.png"));
+        	switch (this.player_num)
+        	{
+        		case 1:
+		        	up1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_up_1.png"));
+		            up2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_up_2.png"));
+		            down1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_down_1.png"));
+		            down2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_down_2.png"));
+		            right1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_right_1.png"));
+		            right2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_right_2.png"));
+		            left1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_left_1.png"));
+		            left2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_left_2.png"));
+	            	break;
+        		case 2:
+        			up1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_up_1.png"));
+		            up2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_up_2.png"));
+		            down1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_down_1.png"));
+		            down2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_down_2.png"));
+		            right1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_right_1.png"));
+		            right2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_right_2.png"));
+		            left1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_left_1.png"));
+		            left2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_left_2.png"));
+        			break;
+        	}
         }
         catch (IOException e)
         {
@@ -73,16 +90,40 @@ public class Player extends Entity {
             boolean invertX = Math.random() < 0.5;
             boolean invertY = Math.random() < 0.5;
 
-            if (key_handler.up_pressed) moveY = invertY ? speed : -speed;
-            if (key_handler.down_pressed) moveY = invertY ? -speed : speed;
-            if (key_handler.left_pressed) moveX = invertX ? speed : -speed;
-            if (key_handler.right_pressed) moveX = invertX ? -speed : speed;
-        } else {
+            switch (this.player_num)
+            {
+            	case 1:
+            		if (key_handler.w_pressed) moveY = invertY ? speed : -speed;
+                    if (key_handler.s_pressed) moveY = invertY ? -speed : speed;
+                    if (key_handler.a_pressed) moveX = invertX ? speed : -speed;
+                    if (key_handler.d_pressed) moveX = invertX ? -speed : speed;
+            		break;
+            	case 2:
+            		if (key_handler.up_pressed) moveY = invertY ? speed : -speed;
+                    if (key_handler.down_pressed) moveY = invertY ? -speed : speed;
+                    if (key_handler.left_pressed) moveX = invertX ? speed : -speed;
+                    if (key_handler.right_pressed) moveX = invertX ? -speed : speed;
+            		break;
+            }
+        }
+        else
+        {
             // Normal movement controls
-            if (key_handler.up_pressed) moveY = -speed;
-            else if (key_handler.down_pressed) moveY = speed;
-            else if (key_handler.left_pressed) moveX = -speed;
-            else if (key_handler.right_pressed) moveX = speed;
+        	switch (this.player_num)
+            {
+            	case 1:
+            		if (key_handler.w_pressed) moveY = -speed;
+                    else if (key_handler.s_pressed) moveY = speed;
+                    else if (key_handler.a_pressed) moveX = -speed;
+                    else if (key_handler.d_pressed) moveX = speed;
+            		break;
+            	case 2:
+            		if (key_handler.up_pressed) moveY = -speed;
+                    else if (key_handler.down_pressed) moveY = speed;
+                    else if (key_handler.left_pressed) moveX = -speed;
+                    else if (key_handler.right_pressed) moveX = speed;
+            		break;
+            }
         }
 
         // Set direction based on last key pressed for sprite facing
@@ -237,7 +278,8 @@ public class Player extends Entity {
     public void draw(Graphics g2) {
         BufferedImage sprite = null;
 
-        switch (direction) {
+        switch (direction)
+        {
             case "up":
                 sprite = (sprite_num == 1) ? up1 : up2;
                 break;
