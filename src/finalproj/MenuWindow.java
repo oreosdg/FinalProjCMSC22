@@ -11,6 +11,8 @@ public class MenuWindow extends JFrame {
     public static final int CELL_SIZE = 48; // Size of 1 cell
     public static final int SCREEN_WIDTH = 21 * CELL_SIZE;  // 21 columns
     public static final int SCREEN_HEIGHT = 19 * CELL_SIZE; // 19 rows
+    Sound sound = new Sound();
+    boolean music_on = false;
 
     public MenuWindow() {
         setTitle("Elbi Express");
@@ -26,9 +28,13 @@ public class MenuWindow extends JFrame {
     }
 
     private BufferedImage loadImage(String imagePath) {
-        try {
+        try
+        {
             return ImageIO.read(getClass().getResourceAsStream("/scenes/" + imagePath));
-        } catch (IOException | NullPointerException e) {
+        }
+        catch
+        (IOException | NullPointerException e)
+        {
             System.err.println("Failed to load image: /scenes/" + imagePath);
             e.printStackTrace();
             return null;
@@ -45,6 +51,11 @@ public class MenuWindow extends JFrame {
 
         public MenuPanel(MenuWindow parent) {
             this.parent = parent;
+            if(!music_on)
+            {
+            	playMusic(0);
+            	music_on=true;
+            }
 
             setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
             setLayout(null);
@@ -63,6 +74,7 @@ public class MenuWindow extends JFrame {
             btnDevelopers = createButton("D1.png", centerX, startY + 2 * spacingY, btnWidth, btnHeight);
 
             btnNewGame.addActionListener(e -> {
+            	stopMusic();
                 parent.dispose();
                 Main mainGame = new Main();
                 mainGame.launchGameWindow();
@@ -91,6 +103,24 @@ public class MenuWindow extends JFrame {
             if (backgroundImage != null) {
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
+        }
+
+        public void playMusic(int i)
+        {
+        	sound.setFile(i);
+        	sound.play();
+        	sound.loop();
+        }
+
+        public void stopMusic()
+        {
+        	sound.stop();
+        }
+
+        public void playSF(int i)
+        {
+        	sound.setFile(i);
+        	sound.play();
         }
 
         private JButton createButton(String imagePath, int x, int y, int width, int height) {

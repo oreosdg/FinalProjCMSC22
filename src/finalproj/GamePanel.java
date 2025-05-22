@@ -28,8 +28,10 @@ public class GamePanel extends JPanel implements Runnable
     public CollisionChecker collision_checker = new CollisionChecker(this);
     public AssetSetter asset_setter = new AssetSetter(this);
     Thread gameThread;
+
     Player player1 = new Player(this, key_handler, 1);
     Player player2 = new Player(this, key_handler, 2);
+    public Sound sound = new Sound();
 
     public SuperObject obj[] = new SuperObject[20];
 
@@ -49,6 +51,7 @@ public class GamePanel extends JPanel implements Runnable
     private NaturalDisaster currentDisaster = null; // Current disaster
     private long disasterStartTime = 0; // When disaster started
     private boolean disasterActive = false; // If disaster active
+    boolean sfx_disaster_playing = false;
 
     // For rain animation
     private final int maxRaindrops = 300;
@@ -72,7 +75,8 @@ public class GamePanel extends JPanel implements Runnable
         this.setFocusable(true);
 
         // Initialize raindrop positions and speeds
-        for (int i = 0; i < maxRaindrops; i++) {
+        for (int i = 0; i < maxRaindrops; i++)
+        {
             rainX[i] = random.nextInt(screen_width);
             rainY[i] = -random.nextInt(screen_height); // Start above screen randomly
             rainSpeedArr[i] = rainSpeed - 5 + random.nextInt(11); // Speed between 15-25
@@ -89,6 +93,7 @@ public class GamePanel extends JPanel implements Runnable
     public void setUpGame()
     {
         asset_setter.setObject();
+        playMusic(1);
         lastDisasterTime = System.currentTimeMillis();
         // Random interval for first disaster
         disasterInterval = disasterIntervalMin + (long) (Math.random() * (disasterIntervalMax - disasterIntervalMin));
@@ -151,7 +156,8 @@ public class GamePanel extends JPanel implements Runnable
                 if (remaining_time < 0) remaining_time = 0;
                 Thread.sleep((long) remaining_time);
                 next_draw_time += draw_interval;
-            } catch (InterruptedException e)
+            }
+            catch (InterruptedException e)
             {
                 e.printStackTrace();
             }
@@ -165,13 +171,19 @@ public class GamePanel extends JPanel implements Runnable
             switch (currentDisaster)
             {
                 case THUNDERSTORM:
+                	playSF(3);
+                	sfx_disaster_playing=true;
                     player_speed = original_speed * 4; // speed quadrupled
                     updateRain();
                     break;
                 case BLACKOUT:
+                	playSF(4);
+                	sfx_disaster_playing=true;
                     player_speed = original_speed; // normal speed
                     break;
                 case EARTHQUAKE:
+                	playSF(2);
+                	sfx_disaster_playing=true;
                     player_speed = original_speed;
                     break;
                 default:
@@ -181,6 +193,7 @@ public class GamePanel extends JPanel implements Runnable
         }
         else
         {
+        	sfx_disaster_playing=false;
             player_speed = original_speed;
         }
         player1.update();
@@ -254,6 +267,27 @@ public class GamePanel extends JPanel implements Runnable
         g2.translate(-shakeOffsetX, -shakeOffsetY);
 
         g2.dispose();
+    }
+
+    public void playMusic(int i)
+    {
+    	sound.setFile(i);
+    	sound.play();
+    	sound.loop();
+    }
+
+    public void stopMusic()
+    {
+    	sound.stop();
+    }
+
+    public void playSF(int i)
+    {
+    	if(!sfx_disaster_playing)
+    	{
+    		sound.setFile(i);
+        	sound.play();
+    	}
     }
 
     private void drawThunderstormEffect(Graphics2D g2)

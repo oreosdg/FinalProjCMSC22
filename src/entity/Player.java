@@ -156,12 +156,12 @@ public class Player extends Entity {
 
         if(timer1!=null)
 		{
-			if(timer1.getSecondsElapsed()<30 && !timer1.isStopped())
+			if(timer1.getSecondsElapsed()<15 && !timer1.isStopped())
 			{
 				timer1.setSecondsElapsed(game_panel.seconds_display);
 				//System.out.println(timer1.getSecondsElapsed());
 			}
-			else if(timer1.getSecondsElapsed()==30)
+			else if(timer1.getSecondsElapsed()==15)
 			{
 				game_panel.asset_setter.replace1();
 				timer1.reset();
@@ -169,12 +169,12 @@ public class Player extends Entity {
 		}
 		if(timer2!=null)
 		{
-			if(timer2.getSecondsElapsed()<30 && !timer2.isStopped())
+			if(timer2.getSecondsElapsed()<15 && !timer2.isStopped())
 			{
 				timer2.setSecondsElapsed(game_panel.seconds_display);
 				//System.out.println(timer2.getSecondsElapsed());
 			}
-			else if(timer2.getSecondsElapsed()==30)
+			else if(timer2.getSecondsElapsed()==15)
 			{
 				game_panel.asset_setter.replace2();
 				timer2.reset();
@@ -182,12 +182,12 @@ public class Player extends Entity {
 		}
 		if(timer3!=null)
 		{
-			if(timer3.getSecondsElapsed()<30 && !timer3.isStopped())
+			if(timer3.getSecondsElapsed()<15 && !timer3.isStopped())
 			{
 				timer3.setSecondsElapsed(game_panel.seconds_display);
 				//System.out.println(timer3.getSecondsElapsed());
 			}
-			else if(timer3.getSecondsElapsed()==30)
+			else if(timer3.getSecondsElapsed()==15)
 			{
 				game_panel.asset_setter.replace3();
 				timer3.reset();
@@ -195,12 +195,12 @@ public class Player extends Entity {
 		}
 		if(timer4!=null)
 		{
-			if(timer4.getSecondsElapsed()<30 && !timer4.isStopped())
+			if(timer4.getSecondsElapsed()<15 && !timer4.isStopped())
 			{
 				timer4.setSecondsElapsed(game_panel.seconds_display);
 				//System.out.println(timer4.getSecondsElapsed());
 			}
-			else if(timer4.getSecondsElapsed()==30)
+			else if(timer4.getSecondsElapsed()==15)
 			{
 				game_panel.asset_setter.replace4();
 				timer4.reset();
@@ -213,6 +213,7 @@ public class Player extends Entity {
             String obj_name = game_panel.obj[i].name;
             switch (obj_name) {
                 case "notif":
+                	game_panel.playSF(5);
                     has_order++;
                     inv.add(game_panel.obj[i].num_assigned);
                     if(game_panel.obj[i].num_link==1)
@@ -263,7 +264,9 @@ public class Player extends Entity {
                     System.out.println("Order in Inventory!");
                     break;
                 case "door":
-                    if (has_order > 0 && inv.contains(game_panel.obj[i].num_assigned)) {
+                    if (has_order > 0 && inv.contains(game_panel.obj[i].num_assigned))
+                    {
+                    	game_panel.playSF(6);
                         has_order--;
                         inv.remove(Integer.valueOf(game_panel.obj[i].num_assigned));
                         score++;
