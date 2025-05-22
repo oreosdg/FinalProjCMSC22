@@ -27,7 +27,7 @@ public class Player extends Entity {
     public Player(GamePanel game_panel, KeyHandler key_handler) {
         this.game_panel = game_panel;
         this.key_handler = key_handler;
-        solid_area = new Rectangle(8, 16, 32, 30);
+        solid_area = new Rectangle(8, 16, 32, 32);
         x_solid_area_default = solid_area.x;
         y_solid_area_default = solid_area.y;
 
@@ -43,7 +43,8 @@ public class Player extends Entity {
     }
 
     public void getSprite() {
-        try {
+        try
+        {
             up1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_up_1.png"));
             up2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_up_2.png"));
             down1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_down_1.png"));
@@ -52,7 +53,9 @@ public class Player extends Entity {
             right2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_right_2.png"));
             left1 = ImageIO.read(getClass().getResourceAsStream("/player/player1_left_1.png"));
             left2 = ImageIO.read(getClass().getResourceAsStream("/player/player1_left_2.png"));
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
@@ -77,9 +80,9 @@ public class Player extends Entity {
         } else {
             // Normal movement controls
             if (key_handler.up_pressed) moveY = -speed;
-            if (key_handler.down_pressed) moveY = speed;
-            if (key_handler.left_pressed) moveX = -speed;
-            if (key_handler.right_pressed) moveX = speed;
+            else if (key_handler.down_pressed) moveY = speed;
+            else if (key_handler.left_pressed) moveX = -speed;
+            else if (key_handler.right_pressed) moveX = speed;
         }
 
         // Set direction based on last key pressed for sprite facing
@@ -92,7 +95,8 @@ public class Player extends Entity {
         collision_on = false;
         game_panel.collision_checker.checkTile(this);
 
-        if (!collision_on) { // Move only if no collision
+        if (!collision_on)
+        { // Move only if no collision
             x_pos += moveX;
             y_pos += moveY;
         }

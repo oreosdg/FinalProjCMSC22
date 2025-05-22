@@ -29,6 +29,7 @@ public class Timer
 
 	public void reset()
 	{
+		this.elapsed_seconds=0;
 		this.stopped=true;
 	}
 

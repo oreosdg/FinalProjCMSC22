@@ -45,7 +45,7 @@ public class CollisionChecker
 				}
 				break;
 			case "right":
-				entity_right_col = (entity_right_x - entity.speed)/game_panel.tile_size; //this equation predicts where the player will be when w is pressed
+				entity_right_col = (entity_right_x + entity.speed)/game_panel.tile_size; //this equation predicts where the player will be when w is pressed
 				tile_num1 = game_panel.tile_handler.mapTileNum[entity_right_col][entity_top_row]; //this is equal to the top left corner of the invisible area
 				tile_num2 = game_panel.tile_handler.mapTileNum[entity_right_col][entity_bot_row];
 				if(game_panel.tile_handler.tile[tile_num1].collision == true || game_panel.tile_handler.tile[tile_num2].collision == true)
@@ -54,7 +54,7 @@ public class CollisionChecker
 				}
 				break;
 			case "left":
-				entity_left_col = (entity_left_x + entity.speed)/game_panel.tile_size; //this equation predicts where the player will be when w is pressed
+				entity_left_col = (entity_left_x - entity.speed)/game_panel.tile_size; //this equation predicts where the player will be when w is pressed
 				tile_num1 = game_panel.tile_handler.mapTileNum[entity_left_col][entity_top_row]; //this is equal to the top left corner of the invisible area
 				tile_num2 = game_panel.tile_handler.mapTileNum[entity_left_col][entity_bot_row];
 				if(game_panel.tile_handler.tile[tile_num1].collision == true || game_panel.tile_handler.tile[tile_num2].collision == true)
