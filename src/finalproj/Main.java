@@ -6,6 +6,11 @@ public class Main
 {
 	public static void main(String[] args)
 	{
+		new MenuWindow();
+	}
+
+	public void launchGameWindow()
+	{
 		JFrame window = new JFrame(); //window to start
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
