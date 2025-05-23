@@ -6,7 +6,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class MenuWindow extends JFrame {
+public class MenuWindow extends JFrame
+{
 
     public static final int CELL_SIZE = 48; // Size of 1 cell
     public static final int SCREEN_WIDTH = 21 * CELL_SIZE;  // 21 columns
@@ -14,7 +15,8 @@ public class MenuWindow extends JFrame {
     Sound sound = new Sound();
     boolean music_on = false;
 
-    public MenuWindow() {
+    public MenuWindow()
+    {
         setTitle("Elbi Express");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -32,8 +34,7 @@ public class MenuWindow extends JFrame {
         {
             return ImageIO.read(getClass().getResourceAsStream("/scenes/" + imagePath));
         }
-        catch
-        (IOException | NullPointerException e)
+        catch(IOException | NullPointerException e)
         {
             System.err.println("Failed to load image: /scenes/" + imagePath);
             e.printStackTrace();
@@ -41,7 +42,8 @@ public class MenuWindow extends JFrame {
         }
     }
 
-    private class MenuPanel extends JPanel {
+    private class MenuPanel extends JPanel
+    {
         private final MenuWindow parent;
         private final Image backgroundImage;
 
@@ -115,12 +117,6 @@ public class MenuWindow extends JFrame {
         public void stopMusic()
         {
         	sound.stop();
-        }
-
-        public void playSF(int i)
-        {
-        	sound.setFile(i);
-        	sound.play();
         }
 
         private JButton createButton(String imagePath, int x, int y, int width, int height) {

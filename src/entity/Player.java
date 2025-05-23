@@ -17,7 +17,6 @@ public class Player extends Entity {
     KeyHandler key_handler;
     int player_num;
     int has_order = 0;
-    int score = 0;
     ArrayList<Integer> inv = new ArrayList<Integer>();
 
     Timer timer1;
@@ -269,9 +268,9 @@ public class Player extends Entity {
                     	game_panel.playSF(6);
                         has_order--;
                         inv.remove(Integer.valueOf(game_panel.obj[i].num_assigned));
-                        score++;
+                        game_panel.score++;
                         System.out.println("Order delivered!");
-                        System.out.println("Score: " + score);
+                        System.out.println("Score: " + game_panel.score);
                     }
                     break;
             }

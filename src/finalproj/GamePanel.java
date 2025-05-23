@@ -4,8 +4,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.awt.BasicStroke;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import entity.Player;
@@ -14,9 +19,10 @@ import tile.TileHandler;
 
 public class GamePanel extends JPanel implements Runnable
 {
+	JFrame orig;
+
     final int orig_tile_size = 16;
     final int scale = 3;
-
     public final int tile_size = orig_tile_size * scale;
     public final int max_screen_row = 19;
     public final int max_screen_col = 21;
@@ -42,6 +48,9 @@ public class GamePanel extends JPanel implements Runnable
 
     long start_time;
     public long seconds_display;
+
+    public int score = 0;
+    public boolean game_end=false;
 
     // Disaster variables
     private long lastDisasterTime = 0;
@@ -106,7 +115,7 @@ public class GamePanel extends JPanel implements Runnable
         double draw_interval = 1000000000 / FPS;
         double next_draw_time = System.nanoTime() + draw_interval;
         start_time = System.currentTimeMillis();
-        while (gameThread != null)
+        while (gameThread != null && !game_end)
         {
         	long elapsed_time = System.currentTimeMillis() - start_time;
         	long elapsed_seconds = elapsed_time / 1000;
@@ -144,6 +153,11 @@ public class GamePanel extends JPanel implements Runnable
             {
                 shakeOffsetX = 0;
                 shakeOffsetY = 0;
+            }
+
+            if(score==1 && !game_end || seconds_display>10 && !game_end)
+            {
+            	game_end=true;
             }
 
             update();
@@ -263,6 +277,38 @@ public class GamePanel extends JPanel implements Runnable
         player1.draw(g2);
         player2.draw(g2);
 
+        if(game_end==true)
+        {
+        	stopMusic();
+        	BufferedImage bg_image;
+        	if(score==1)
+        	{
+    			try
+    			{
+    				bg_image = ImageIO.read(getClass().getResourceAsStream("/scenes/win.png"));
+    				g2.drawImage(bg_image, 0, 0, screen_width, screen_height, null);
+    			}
+    			catch (IOException e)
+    			{
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+        	}
+        	else
+        	{
+    			try
+    			{
+    				playSF(7);
+    				bg_image = ImageIO.read(getClass().getResourceAsStream("/scenes/gameover.png"));
+    				g2.drawImage(bg_image, 0, 0, screen_width, screen_height, null);
+    			}
+    			catch (IOException e)
+    			{
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+        	}
+        }
         // Reset translation
         g2.translate(-shakeOffsetX, -shakeOffsetY);
 

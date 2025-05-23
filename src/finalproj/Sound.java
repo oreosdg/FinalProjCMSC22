@@ -20,6 +20,7 @@ public class Sound
 		soundURL[4] = getClass().getResource("/sound/blackout.wav");
 		soundURL[5] = getClass().getResource("/sound/pick_up.wav");
 		soundURL[6] = getClass().getResource("/sound/delivered.wav");
+		soundURL[7] = getClass().getResource("/sound/game_over.wav");
 	}
 
 	public void setFile(int i)
