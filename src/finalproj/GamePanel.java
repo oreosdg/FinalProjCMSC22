@@ -155,7 +155,7 @@ public class GamePanel extends JPanel implements Runnable
                 shakeOffsetY = 0;
             }
 
-            if(score==1 && !game_end || seconds_display>10 && !game_end)
+            if(score==40 && !game_end || seconds_display>300 && !game_end)
             {
             	game_end=true;
             }
